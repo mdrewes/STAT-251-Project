@@ -6,5 +6,8 @@ output: html_notebook
 ```{r}
 data <- read.csv("MLBdata.csv", header = TRUE, stringsAsFactors = FALSE)
 head(data)
+TAL <- c("BAL","BOS","CHW","CLE","DET","HOU","KC","LAA","MIN","NYY","OAK","SEA", "TEX","TB","TOR")
+AL <- data[data$Team %in% TAL,]
+NL <- !(data[data$Team %in% TAL,])
 ```
 
