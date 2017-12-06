@@ -3,7 +3,7 @@ title: "R Notebook"
 output: html_notebook
 ---
 
-```{r}
+```{r, include=FALSE}
 # data <- read.csv("MLBdata.csv", header = TRUE, stringsAsFactors = FALSE)
 # head(data)
 # TAL <- c("BAL","BOS","CHW","CLE","DET","HOU","KC","LAA","MIN","NYY","OAK","SEA", "TEX","TB","TOR")
@@ -15,3 +15,16 @@ output: html_notebook
 for (x in c("AL.RData","NL.RData","All.RData")){load(x)}
 ```
 
+## Introduction
+
+```{r}
+
+```
+
+## Methods
+
+## Results
+
+## Discussion
+
+##
