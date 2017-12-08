@@ -158,60 +158,60 @@ Explain how you will use the posterior distribution to answer your research ques
 
 Results: Report summary statistics for the data. 
 *Mean of American League Mean Homerun Distance:*
-```{r}
+```{r, eval=TRUE, echo=FALSE}
 mean(mus_AL)
 ```
 
 *Standard Deviation of American League Mean Homerun Distance:*
-```{r}
+```{r, eval=TRUE, echo=FALSE}
 sd(mus_AL)
 ```
 
 
 *Mean of National League Mean Homerun Distance:*
-```{r}
+```{r, eval=TRUE, echo=FALSE}
 mean(mus_NL)
 ```
 
 *Standard Deviation of National League Mean Homerun Distance:*
-```{r}
+```{r, eval=TRUE, echo=FALSE}
 sd(mus_NL)
 ```
 
 
 *Mean of American League Mean Homerun Distance:*
-```{r}
+```{r, eval=TRUE, echo=FALSE}
 mean(vars_AL)
 ```
 
 *Standard Deviation of American League Mean Homerun Distance:*
-```{r}
+```{r, eval=TRUE, echo=FALSE}
 sd(vars_AL)
 ```
 
 *Mean of American League Mean Homerun Distance:*
-```{r}
+```{r, eval=TRUE, echo=FALSE}
 mean(vars_NL)
 ```
 
 *Standard Deviation of American League Mean Homerun Distance:*
-```{r}
+```{r, eval=TRUE, echo=FALSE}
 sd(vars_NL)
 ```
 
 
 Perform posterior inference on the parameters for each population and include two sets of properly formatted graphics: one that compares the parameters from the two populations to each other; another that compares the priors to the posteriors. Include and interpret credible intervals.  
-```{r}
+```{r, eval=TRUE, echo=FALSE}
 plot(density(mus_AL))
 lines(density(mus_NL))
 ```
 
-```{r}
+```{r, eval=TRUE, echo=FALSE}
 plot(density(vars_AL))
 lines(density(vars_NL))
 ```
 
-```{r}
+```{r, eval=TRUE, echo=FALSE}
 prior_range <- seq(300,500,by=0.05)
 prior_like <- dnorm(prior_range, mean = 420, sd = 15)
 
@@ -221,7 +221,7 @@ plot(prior_range, prior_like, type = 'l',
      ylab = "Likelihood")
 ```
 
-```{r}
+```{r, eval=TRUE, echo=FALSE}
 prior_range <- seq(300,500,by=0.05)
 prior_like <- dnorm(prior_range, mean = 420, sd = 15)
 
@@ -231,7 +231,7 @@ plot(prior_range, prior_like, type = 'l',
      ylab = "Likelihood")
 ```
 
-```{r}
+```{r, eval=TRUE, echo=FALSE}
 prior_range <- seq(300,500,by=0.05)
 prior_like <- dnorm(prior_range, mean = 420, sd = 15)
 
@@ -241,7 +241,7 @@ plot(prior_range, prior_like, type = 'l',
      ylab = "Likelihood")
 ```
 
-```{r}
+```{r, eval=TRUE, echo=FALSE}
 prior_range <- seq(300,500,by=0.05)
 prior_like <- dnorm(prior_range, mean = 420, sd = 15)
 
@@ -253,7 +253,7 @@ plot(prior_range, prior_like, type = 'l',
 
 
 Then perform the posterior inference on the difference in means. 
-```{r}
+```{r, eval=TRUE, echo=FALSE}
 diffs <- mus_NL-mus_AL
 mean(diffs)
 sd(diffs)
@@ -261,13 +261,13 @@ sd(diffs)
 
 
 Report and properly interpret an associated credible interval for this function of parameters. 
-```{r}
+```{r, eval=TRUE, echo=FALSE}
 quantile(probs=c(0.025, 0.975), diffs)
 ```
 
 
 Include properly formatted and informative graphic(s) for this function of parameters. 
-```{r}
+```{r, eval=TRUE, echo=FALSE}
 plot(density(diffs))
 ```
 
