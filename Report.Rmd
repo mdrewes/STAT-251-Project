@@ -103,16 +103,6 @@ acf(mus_NL, main = "")
 acf(vars_NL, main = "")
 ```
 
-```{r}
-plot(density(mus_AL))
-lines(density(mus_NL))
-```
-
-```{r}
-plot(density(vars_AL))
-lines(density(vars_NL))
-```
-
 
 ## Introduction
 
@@ -166,123 +156,128 @@ Explain how you will use the posterior distribution to answer your research ques
 
 ## Results
 
-Results: Report summary statistics for the data. Perform posterior inference on the parameters for each population and include two sets of properly formatted graphics: one that compares the parameters from the two populations to each other; another that compares the priors to the posteriors. Include and interpret credible intervals.  Then perform the posterior inference on the function of the parameters that directly answers your primary research question (for example, the difference in means, or the ratio of variances). Report and properly interpret an associated credible interval for this function of parameters. Include properly formatted and informative graphic(s) for this function of parameters. 
-
-## Discussion
-
-Summarize your results, identify shortcomings of the work, and explain what could be done in the future to either better answer your question or to address a natural follow-up question. 
-
-## Appendix (R code)
-
-```{r, include=FALSE}
-# data <- read.csv("MLBdata.csv", header = TRUE, stringsAsFactors = FALSE)
-# head(data)
-# TAL <- c("BAL","BOS","CHW","CLE","DET","HOU","KC","LAA","MIN","NYY","OAK","SEA", "TEX","TB","TOR")
-# AL <- data[data$Team %in% TAL,]
-# NL <- data[!data$Team %in% TAL,]
-```
-
+Results: Report summary statistics for the data. 
+*Mean of American League Mean Homerun Distance:*
 ```{r}
-for (x in c("AL.RData","NL.RData","All.RData")){load(x)}
-AL <- AL$True.Distance
-NL <- NL$True.Distance
+mean(mus_AL)
+```
+
+*Standard Deviation of American League Mean Homerun Distance:*
+```{r}
+sd(mus_AL)
 ```
 
 
-```{r, Results}
-update.mu <- function(sigma2, ys, m, v){
-  
-  n <- length(ys)
-  vstar <- 1/(n/sigma2+1/v)
-  mstar <- vstar*(n*mean(ys)/sigma2+m/v)
-  return( rnorm(1, mstar, sqrt(vstar)) )
-  
-}
-
-update.var <- function(mu, ys, a, b){
-  
-  n <- length(ys)
-  astar <- a + n/2
-  bstar <- b + 0.5*sum( (ys-mu)^2 )
-  return( 1/rgamma(1, astar, bstar) )
-  
-}
+*Mean of National League Mean Homerun Distance:*
+```{r}
+mean(mus_NL)
 ```
 
-```{r, AL Gibbs}
-obs_AL <- AL
-m_AL <- 420
-v_AL <- 225
-a_AL <- 1 # We can look at changing these values
-b_AL <- 1 # ^
-
-set.seed(2017) 
-
-N <- 100000
-mus_AL <- rep(NA, N)
-vars_AL <- rep(NA, N)
-
-mus_AL[1] <- mean(obs_AL) 
-vars_AL[1] <- var(obs_AL)
-
-for (j in 2:N){
-  mus_AL[j] <- update.mu(sigma2 = vars_AL[j-1], ys = obs_AL, m=m_AL, v=v_AL)
-  vars_AL[j] <- update.var(mu = mus_AL[j], ys = obs_AL, a = a_AL, b = b_AL)
-}
+*Standard Deviation of National League Mean Homerun Distance:*
+```{r}
+sd(mus_NL)
 ```
 
-```{r, Plots AL}
-par(mfrow = c(2,2))
-plot(mus_AL[1:1000], type="l",
-   main=expression(paste("Trace plot for ", mu)))
 
-plot(vars_AL[1:1000], type="l",
-  main=expression(paste(
-   "Trace plot for ", sigma^2)))
-
-acf(mus_AL, main = "") 
-
-acf(vars_AL, main = "")
+*Mean of American League Mean Homerun Distance:*
+```{r}
+mean(vars_AL)
 ```
 
-```{r, NL Gibbs}
-obs_NL <- NL
-m_NL <- 420
-v_NL <- 225
-a_NL <- 1 # We can look at changing these values
-b_NL <- 1 # ^
-
-set.seed(2017) 
-
-N <- 100000
-mus_NL <- rep(NA, N)
-vars_NL <- rep(NA, N)
-
-mus_NL[1] <- mean(obs_NL) 
-vars_NL[1] <- var(obs_NL)
-
-for (j in 2:N){
-  mus_NL[j] <- update.mu(sigma2 = vars_NL[j-1], ys = obs_NL, m=m_NL, v=v_NL)
-  vars_NL[j] <- update.var(mu = mus_NL[j], ys = obs_NL, a = a_NL, b = b_NL)
-}
+*Standard Deviation of American League Mean Homerun Distance:*
+```{r}
+sd(vars_AL)
 ```
 
+*Mean of American League Mean Homerun Distance:*
+```{r}
+mean(vars_NL)
+```
+
+*Standard Deviation of American League Mean Homerun Distance:*
+```{r}
+sd(vars_NL)
+```
+
+
+Perform posterior inference on the parameters for each population and include two sets of properly formatted graphics: one that compares the parameters from the two populations to each other; another that compares the priors to the posteriors. Include and interpret credible intervals.  
 ```{r}
 plot(density(mus_AL))
 lines(density(mus_NL))
 ```
 
-
-```{r, Plots NL}
-par(mfrow = c(2,2))
-plot(mus_NL[1:1000], type="l",
-   main=expression(paste("Trace plot for ", mu)))
-
-plot(vars_NL[1:1000], type="l",
-  main=expression(paste(
-   "Trace plot for ", sigma^2)))
-
-acf(mus_NL, main = "") 
-
-acf(vars_NL, main = "")
+```{r}
+plot(density(vars_AL))
+lines(density(vars_NL))
 ```
+
+```{r}
+prior_range <- seq(300,500,by=0.05)
+prior_like <- dnorm(prior_range, mean = 420, sd = 15)
+
+plot(prior_range, prior_like, type = 'l',
+     main = "Prior Distribution",
+     xlab = expression(mu),
+     ylab = "Likelihood")
+```
+
+```{r}
+prior_range <- seq(300,500,by=0.05)
+prior_like <- dnorm(prior_range, mean = 420, sd = 15)
+
+plot(prior_range, prior_like, type = 'l',
+     main = "Prior Distribution",
+     xlab = expression(mu),
+     ylab = "Likelihood")
+```
+
+```{r}
+prior_range <- seq(300,500,by=0.05)
+prior_like <- dnorm(prior_range, mean = 420, sd = 15)
+
+plot(prior_range, prior_like, type = 'l',
+     main = "Prior Distribution",
+     xlab = expression(mu),
+     ylab = "Likelihood")
+```
+
+```{r}
+prior_range <- seq(300,500,by=0.05)
+prior_like <- dnorm(prior_range, mean = 420, sd = 15)
+
+plot(prior_range, prior_like, type = 'l',
+     main = "Prior Distribution",
+     xlab = expression(mu),
+     ylab = "Likelihood")
+```
+
+
+Then perform the posterior inference on the difference in means. 
+```{r}
+diffs <- mus_NL-mus_AL
+mean(diffs)
+sd(diffs)
+```
+
+
+Report and properly interpret an associated credible interval for this function of parameters. 
+```{r}
+quantile(probs=c(0.025, 0.975), diffs)
+```
+
+
+Include properly formatted and informative graphic(s) for this function of parameters. 
+```{r}
+plot(density(diffs))
+```
+
+
+## Discussion
+
+Summarize your results 
+
+identify shortcomings of the work, and 
+
+explain what could be done in the future to either better answer your question or to address a natural follow-up question 
+
+## Appendix (R code)
