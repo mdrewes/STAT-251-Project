@@ -1,7 +1,9 @@
 ---
 title: "A Comparison of Homerun Distance Between American League and National League Hitters"
 author: "Caleb Pulsipher and Matt Drewes"
-output: html_notebook
+output: 
+  pdf_document: 
+    latex_engine: xelatex
 ---
 
 ```{r}
@@ -142,16 +144,26 @@ Plot the prior distributions.
 ```{r, eval=TRUE, echo=FALSE}
 prior_range <- seq(300,500,by=0.05)
 prior_like <- dnorm(prior_range, mean = 420, sd = 15)
-
 plot(prior_range, prior_like, type = 'l',
-     main = "Prior Distribution",
+     main = "Prior Distribution of the Mean",
      xlab = expression(mu),
+     ylab = "Likelihood")
+```
+
+```{r}
+library(invgamma)
+prior_range <- seq(0,10,by=0.05)
+# prior_like <- 1/dgamma(prior_range, shape = 1, rate = 1)
+prior_like <- dinvgamma(prior_range, shape = 1, rate = 1)
+plot(prior_range, prior_like, type = 'l',
+     main = "Prior Distribution of the Variance",
+     xlab = expression(sigma^2),
      ylab = "Likelihood")
 ```
 
 Explain how you will use the posterior distribution to answer your research question.
 
-*We wish to do an analysis for the overall home run distance not just the 2017 season. For that we will use Gibbs sampling to estimate the parameters and compare to find if there is a difference among the two leagues. We will use the data from the 2017 season and the prior we have set for the sampling. Our prior of ~ N(420,15^2) with the prior of sigma^2 being the inverse gamma distribution with shape = and rate = .We plan to use the posterior distributions to provide evidence for our research question both graphically and computationally. First, because we assumed an identical prior distribution, any difference in the visual representation of the posterior distributions may indicate a significant difference between the two leagues. With this information, we will analyze the differences between our simulated means and conclude whether or not we have sufficient evidence to conclude that there is a significant difference between the populations.*
+*We wish to do an analysis for the overall home run distance, not just the 2017 season. For that we will use Gibbs sampling to estimate the parameters and compare to find if there is a difference among the two leagues. We will use the data from the 2017 season and the prior we have set for the sampling. Our prior of ~ N(420,15^2) with the prior of sigma^2 being the inverse gamma distribution with shape = and rate = .We plan to use the posterior distributions to provide evidence for our research question both graphically and computationally. First, because we assumed an identical prior distribution, any difference in the visual representation of the posterior distributions may indicate a significant difference between the two leagues. With this information, we will analyze the differences between our simulated means and conclude whether or not we have sufficient evidence to conclude that there is a significant difference in the populations.*
 
 
 ## Results
@@ -202,13 +214,28 @@ sd(vars_NL)
 
 Perform posterior inference on the parameters for each population and include two sets of properly formatted graphics: one that compares the parameters from the two populations to each other; another that compares the priors to the posteriors. Include and interpret credible intervals.  
 ```{r, eval=TRUE, echo=FALSE}
-plot(density(mus_AL))
-lines(density(mus_NL))
+plot(density(mus_AL), main = "Estimated Density of Means", xlab = expression(mu))
+lines(density(mus_NL), lty = 2)
+legend("topright", c('AL','NL'), lty = c(1,2))
 ```
 
 ```{r, eval=TRUE, echo=FALSE}
-plot(density(vars_AL))
-lines(density(vars_NL))
+plot(density(vars_AL), main = "Estimated Density of Variances", xlab = expression(sigma^2),
+     xlim = c(500,800), ylim = c(0,0.025))
+lines(density(vars_NL), lty = 2)
+legend("topright", c('AL','NL'), lty = c(1,2))
+```
+
+```{r, eval=TRUE, echo=FALSE}
+prior_range <- seq(350,450,by=0.05)
+prior_like <- dnorm(prior_range, mean = 420, sd = 15)
+
+plot(prior_range, prior_like, type = 'l',
+     main = "Prior/Post Dist. of AL Mean",
+     xlab = expression(mu),
+     ylab = "Likelihood", ylim = c(0,0.8))
+lines(density(mus_AL), lty = 2)
+legend("topright", c('Prior','Posterior'), lty = c(1,2))
 ```
 
 ```{r, eval=TRUE, echo=FALSE}
@@ -216,39 +243,35 @@ prior_range <- seq(300,500,by=0.05)
 prior_like <- dnorm(prior_range, mean = 420, sd = 15)
 
 plot(prior_range, prior_like, type = 'l',
-     main = "Prior Distribution",
+     main = "Prior/Post Dist. of NL Mean",
      xlab = expression(mu),
-     ylab = "Likelihood")
+     ylab = "Likelihood", ylim = c(0,0.8))
+lines(density(mus_NL), lty = 2)
+legend("topright", c('Prior','Posterior'), lty = c(1,2))
 ```
 
 ```{r, eval=TRUE, echo=FALSE}
-prior_range <- seq(300,500,by=0.05)
-prior_like <- dnorm(prior_range, mean = 420, sd = 15)
+prior_range <- seq(500,800,by=0.05)
+prior_like <- dinvgamma(prior_range, shape = 1, rate = 1)
 
 plot(prior_range, prior_like, type = 'l',
-     main = "Prior Distribution",
-     xlab = expression(mu),
-     ylab = "Likelihood")
+     main = "Prior/Post Dist. of AL Variance",
+     xlab = expression(sigma^2),
+     ylab = "Likelihood", ylim = c(0,0.025))
+lines(density(vars_AL), lty = 2)
+legend("topright", c('Prior','Posterior'), lty = c(1,2))
 ```
 
 ```{r, eval=TRUE, echo=FALSE}
-prior_range <- seq(300,500,by=0.05)
-prior_like <- dnorm(prior_range, mean = 420, sd = 15)
+prior_range <- seq(500,800,by=0.05)
+prior_like <- dinvgamma(prior_range, shape = 1, rate = 1)
 
 plot(prior_range, prior_like, type = 'l',
-     main = "Prior Distribution",
-     xlab = expression(mu),
-     ylab = "Likelihood")
-```
-
-```{r, eval=TRUE, echo=FALSE}
-prior_range <- seq(300,500,by=0.05)
-prior_like <- dnorm(prior_range, mean = 420, sd = 15)
-
-plot(prior_range, prior_like, type = 'l',
-     main = "Prior Distribution",
-     xlab = expression(mu),
-     ylab = "Likelihood")
+     main = "Prior/Post Dist. of NL Variance",
+     xlab = expression(sigma^2),
+     ylab = "Likelihood", ylim = c(0,0.025))
+lines(density(vars_NL), lty = 2)
+legend("topright", c('Prior','Posterior'), lty = c(1,2))
 ```
 
 
@@ -265,12 +288,13 @@ Report and properly interpret an associated credible interval for this function 
 quantile(probs=c(0.025, 0.975), diffs)
 ```
 
-
-Include properly formatted and informative graphic(s) for this function of parameters. 
 ```{r, eval=TRUE, echo=FALSE}
-plot(density(diffs))
+plot(density(diffs), main = expression(paste("Density of ", mu[NL]-mu[AL])),
+     xlab = expression(mu[NL]-mu[AL]))
 ```
 
+*Concerned about the above plot.*
+*trace plots of diffs, mus_AL, and mus_NL*
 
 ## Discussion
 
