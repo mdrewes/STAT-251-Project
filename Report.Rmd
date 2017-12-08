@@ -145,7 +145,7 @@ qqline(NL)
 
 
 Explain what the relevant parameters are for the likelihood. Choose and justify your prior distributions. 
-*The relevant parameters for the likelihood are the population mean and variance. We chooose the Normal(420, 15^2) distribution as the prior distribution for the mean homerun distance for both the American and National League, based on our best guess for the means and our understanding of the overall spread of homerun distances. We *
+*The relevant parameters for the likelihood are the population mean and variance. It is reasonable to assume the data are conditionally iid and normally distributed. For the prior distribution of μ, we have chosen a Normal distribution with a mean of 420ft. and a variance of 15^2ft. For the prior distribution for σ2, we have chosen an inverse gamma with shape=1 and rate=1  for the prior distribution for the mean homerun distance for both the American and National League, based on our best guess for the means and our understanding of the overall spread of homerun distances.*
 
 Plot the prior distributions. 
 
