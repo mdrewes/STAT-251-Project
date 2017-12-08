@@ -295,6 +295,7 @@ plot(density(diffs), main = expression(paste("Density of ", mu[NL]-mu[AL])),
 
 *Concerned about the above plot.*
 *trace plots of diffs, mus_AL, and mus_NL*
+*Discarding first 20,000 obs yields extrememly low correlation and smooth/accurate estimate.*
 
 ## Discussion
 
