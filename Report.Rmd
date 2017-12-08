@@ -113,7 +113,7 @@ The question we decided to answer is if there is any difference between home run
 ## Methods
 
 Methods: Explain how the data were obtained, as well as providing a citation of their source. 
-*The data were obtained from ESPN’s site hittrackeronline.com (URL: http://www.hittrackeronline.com/top_true_distance.php). This site is ran by ESPN Stats and Information Group. It shows a list of all of the home runs hit in the 2017 season, who hit the home run, what team they play for, and the true distance of how far the ball was hit in feet.*
+*The data were obtained from ESPN’s site hittrackeronline.com (URL: http://www.hittrackeronline.com/top_true_distance.php). This site is ran by ESPN Stats and Information Group. It contains a list of all of the home runs hit in the 2017 season including: who hit the home run, what team they play for, and the true distance of how far the ball was hit measured in feet.*
 
 Justify your choice of a likelihood (distribution) for the data. 
 *We assume a normal distribution for the homerun distances of each population. This assumption is justified both by a histogram of each sample and by a normal probability plot of each sample.*
