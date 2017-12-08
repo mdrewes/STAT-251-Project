@@ -8,12 +8,12 @@ output: html_notebook
 
 Explain the question you decided to research as well as the value of answering this question.
 
-*Research Question:*
+The question we decided to answer is if there is any difference between home run distance among the American league compared to the National League of the Major League Baseball. The value to answering this question is to see which league, if either, has a statical advantage when it comes to distance of home runs. This is important because each field has varying distances for a home run, which would give a competitive edge to the league that on average can hit farther home runs.
 
 ## Methods
 
 Methods: Explain how the data were obtained, as well as providing a citation of their source. 
-*The data were obtained from...*
+*The data were obtained from ESPN’s site hittrackeronline.com (URL: http://www.hittrackeronline.com/top_true_distance.php). This site is ran by ESPN Stats and Information Group. It shows a list of all of the home runs hit in the 2017 season, who hit the home run, what team they play for, and the true distance of how far the ball was hit in feet.*
 
 Justify your choice of a likelihood (distribution) for the data. 
 *We assume a normal distribution for the homerun distances of each population. This assumption is justified both by a histogram of each sample and by a normal probability plot of each sample.*
@@ -51,7 +51,7 @@ plot(prior_range, prior_like, type = 'l',
 
 Explain how you will use the posterior distribution to answer your research question.
 
-*We plan to use the posterior distributions to provide evidence for our research question both graphically and computationally. First, because we assumed an identical prior distribution, any difference in the visual representation of the posterior distributions may indicate a significant difference between the two leagues. With this information, we will analyze the differences between our simulated means and conclude whether or not we have sufficient evidence to conclude that there is a significant difference between the populations.*
+*We wish to do an analysis for the overall home run distance not just the 2017 season. For that we will use Gibbs sampling to estimate the parameters and compare to find if there is a difference among the two leagues. We will use the data from the 2017 season and the prior we have set for the sampling. Our prior of ~ N(420,15^2) with the prior of sigma^2 being the inverse gamma distribution with shape = and rate = .We plan to use the posterior distributions to provide evidence for our research question both graphically and computationally. First, because we assumed an identical prior distribution, any difference in the visual representation of the posterior distributions may indicate a significant difference between the two leagues. With this information, we will analyze the differences between our simulated means and conclude whether or not we have sufficient evidence to conclude that there is a significant difference between the populations.*
 
 
 ## Results
