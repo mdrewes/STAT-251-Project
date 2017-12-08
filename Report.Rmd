@@ -1,5 +1,6 @@
 ---
-title: "R Notebook"
+title: "A Comparison of Homerun Distance Between American League and National League Hitters"
+author: "Caleb Pulsipher and Matt Drewes"
 output: html_notebook
 ---
 
@@ -7,11 +8,15 @@ output: html_notebook
 
 Explain the question you decided to research as well as the value of answering this question.
 
+*Research Question:*
+
 ## Methods
 
-Methods: Explain how the data were obtained, as well as providing a citation of their source. Justify your choice of a likelihood (distribution) for the data. Explain what the relevant parameters are for the likelihood. Choose and justify your prior distributions.  Plot the prior distributions. Explain how you will use the posterior distribution(s) to answer your research question.
+Methods: Explain how the data were obtained, as well as providing a citation of their source. 
+*The data were obtained from...*
 
-Prior for each League ~ Normal(420, 15^2)
+Justify your choice of a likelihood (distribution) for the data. 
+*We assume a normal distribution for the homerun distances of each population. This assumption is justified both by a histogram of each sample and by a normal probability plot of each sample.*
 
 ```{r, eval=TRUE, echo=FALSE}
 par(mfrow=c(1,2))
@@ -19,6 +24,26 @@ hist(AL)
 hist(NL)
 ```
 
+```{r, eval=TRUE, echo=FALSE}
+par(mfrow=c(1,2))
+qqnorm(AL, main = "Normal Q-Q Plot of AL Data")
+qqline(AL)
+qqnorm(NL, main = "Normal Q-Q Plot of NL Data")
+qqline(NL)
+```
+
+
+
+Explain what the relevant parameters are for the likelihood. 
+*The relevant parameters for the likelihood are...*
+
+
+Choose and justify your prior distributions.  
+*Prior for each League ~ Normal(420, 15^2)*
+
+*Justification: *
+
+Plot the prior distributions. 
 
 ```{r, eval=TRUE, echo=FALSE}
 prior_range <- seq(300,500,by=0.05)
@@ -29,6 +54,10 @@ plot(prior_range, prior_like, type = 'l',
      xlab = expression(mu),
      ylab = "Likelihood")
 ```
+
+Explain how you will use the posterior distribution to answer your research question.
+
+*We plan to use the posterior distributions to provide evidence for our research question both graphically and computationally. First, because we assumed an identical prior distribution, any difference in the visual representation of the posterior distributions may indicate a significant difference between the two leagues. With this information, we will analyze the differences between our simulated means and conclude whether or not we have sufficient evidence to conclude that there is a significant difference between the populations.*
 
 
 ## Results
@@ -135,12 +164,10 @@ for (j in 2:N){
 ```
 
 ```{r}
-plot(density(mus_NL))
+plot(density(mus_AL))
+lines(density(mus_NL))
 ```
 
-```{r}
-plot(density(mus_AL))
-```
 
 ```{r, Plots NL}
 par(mfrow = c(2,2))
