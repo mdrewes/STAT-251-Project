@@ -34,14 +34,8 @@ qqline(NL)
 
 
 
-Explain what the relevant parameters are for the likelihood. 
-*The relevant parameters for the likelihood are...*
-
-
-Choose and justify your prior distributions.  
-*Prior for each League ~ Normal(420, 15^2)*
-
-*Justification: *
+Explain what the relevant parameters are for the likelihood. Choose and justify your prior distributions. 
+*The relevant parameters for the likelihood are the population mean and variance. We chooose the Normal(420, 15^2) distribution as the prior distribution for the mean homerun distance for both the American and National League, based on our best guess for the means and our understanding of the overall spread of homerun distances. We *
 
 Plot the prior distributions. 
 
