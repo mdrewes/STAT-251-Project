@@ -108,7 +108,7 @@ acf(vars_NL, main = "")
 
 Explain the question you decided to research as well as the value of answering this question.
 
-The question we decided to answer is if there is any difference between home run distance among the American league compared to the National League of the Major League Baseball. The value to answering this question is to see which league, if either, has a statical advantage when it comes to distance of home runs. This is important because each field has varying distances for a home run, which would give a competitive edge to the league that on average can hit farther home runs.
+The question we decided to answer is if there is any difference between home run distance among the American league compared to the National League of the MLB (Major League Baseball). The value to answering this question is to see which league, if either, has a statical advantage when it comes to distance of home runs. This is important because each field has varying distances for a home run, which would give a competitive edge to the league that, on average, can hit farther home runs, resulting in a higher amount of hits actually being home runs.
 
 ## Methods
 
