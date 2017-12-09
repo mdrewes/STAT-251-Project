@@ -108,17 +108,13 @@ acf(vars_NL, main = "")
 
 ## Introduction
 
-Explain the question you decided to research as well as the value of answering this question.
-
-The question we decided to answer is if there is any difference between home run distance among the American league compared to the National League of the Major League Baseball. The value to answering this question is to see which league, if either, has a statical advantage when it comes to distance of home runs. This is important because each field has varying distances for a home run, which would give a competitive edge to the league that on average can hit farther home runs.
+Is there any difference in average home run distance between the MLB's two leagues? The purpose of investigating this question is to see if one league, American League (AL) or National League (NL), has a statistical advantage when it comes to home run distance. This is important because each field has varying home run distances (the minimum distance required to clear the home run limit), which would give a competitive edge to the league that can hit farther home runs on average.
 
 ## Methods
 
-Methods: Explain how the data were obtained, as well as providing a citation of their source. 
-*The data were obtained from ESPN’s site hittrackeronline.com (URL: http://www.hittrackeronline.com/top_true_distance.php). This site is ran by ESPN Stats and Information Group. It shows a list of all of the home runs hit in the 2017 season, who hit the home run, what team they play for, and the true distance of how far the ball was hit in feet.*
+The data were obtained from ESPN’s site hittrackeronline.com (URL: http://www.hittrackeronline.com/top_true_distance.php). This site is run by ESPN Stats and Information Group. The original data consisted of a list of each home run hit in the 2017 season, which player hit the home run, the player's team, and the true distance (defined as the estimated total distance the ball would have traveled in the absence of physical barriers) of the hit in feet.
 
-Justify your choice of a likelihood (distribution) for the data. 
-*We assume a normal distribution for the homerun distances of each population. This assumption is justified both by a histogram of each sample and by a normal probability plot of each sample.*
+We assume a normal distribution for the homerun distances of each population. This assumption is justified both by a histogram of each sample and by a normal probability plot of each sample.
 
 ```{r, eval=TRUE, echo=FALSE}
 par(mfrow=c(1,2))
@@ -134,12 +130,7 @@ qqnorm(NL, main = "Normal Q-Q Plot of NL Data")
 qqline(NL)
 ```
 
-
-
-Explain what the relevant parameters are for the likelihood. Choose and justify your prior distributions. 
-*The relevant parameters for the likelihood are the population mean and variance. It is reasonable to assume the data are conditionally iid and normally distributed. For the prior distribution of μ, we have chosen a Normal distribution with a mean of 420ft. and a variance of 15^2ft. For the prior distribution for σ2, we have chosen an inverse gamma with shape=1 and rate=1  for the prior distribution for the mean homerun distance for both the American and National League, based on our best guess for the means and our understanding of the overall spread of homerun distances.*
-
-Plot the prior distributions. 
+The relevant parameters for the likelihood are the population mean and variance. It is reasonable to assume the data are conditionally iid, based on the indviduality of the batters. For the prior distribution of μ and , the mean home run distance for each respective league, we chose a Normal distribution with a mean of 420 ft. and a variance of 15^2 ft, based on our best guess for the means and our understanding of the overall spread of homerun distances. For an objective prior distribution for σ2, we chose an inverse gamma with shape=1 and rate=1.
 
 ```{r, eval=TRUE, echo=FALSE}
 prior_range <- seq(300,500,by=0.05)
@@ -161,14 +152,13 @@ plot(prior_range, prior_like, type = 'l',
      ylab = "Likelihood")
 ```
 
-Explain how you will use the posterior distribution to answer your research question.
+The populations of interest in our study are the home run distances of the "current" American League and National League. In the context of professional sports, where teams inevitably change between seasons, "current" is loosely defined and could be considered as the state of the league from a few seasons past to a few seasons in the future. Thus, our data, the actual results of the 2017 season, can be considered samples these two populations.
 
-*We wish to do an analysis for the overall home run distance, not just the 2017 season. For that we will use Gibbs sampling to estimate the parameters and compare to find if there is a difference among the two leagues. We will use the data from the 2017 season and the prior we have set for the sampling. Our prior of ~ N(420,15^2) with the prior of sigma^2 being the inverse gamma distribution with shape = and rate = .We plan to use the posterior distributions to provide evidence for our research question both graphically and computationally. First, because we assumed an identical prior distribution, any difference in the visual representation of the posterior distributions may indicate a significant difference between the two leagues. With this information, we will analyze the differences between our simulated means and conclude whether or not we have sufficient evidence to conclude that there is a significant difference in the populations.*
+For the analysis itself, we employ Gibbs sampling to simulate potential values of the parameters, followed by Monte Carlo estimation. We use the results, in the form of posterior distributions, to provide evidence for our research question both graphically and computationally. First, because we assumed an identical prior distribution of the AL and NL mean home run distances, any difference in the visual representation of the posterior distributions is potentially indicative of a significant difference between the two leagues. For verification, we compute the differences between our simulated means, after which we provide a statistically plausible interval for the true difference and determine whether or not we have sufficient evidence to conclude that there is a significant difference in the populations.
 
 
 ## Results
 
-Results: Report summary statistics for the data. 
 *Mean of American League Mean Homerun Distance:*
 ```{r, eval=TRUE, echo=FALSE}
 mean(mus_AL)
@@ -210,9 +200,7 @@ mean(vars_NL)
 ```{r, eval=TRUE, echo=FALSE}
 sd(vars_NL)
 ```
-
-
-Perform posterior inference on the parameters for each population and include two sets of properly formatted graphics: one that compares the parameters from the two populations to each other; another that compares the priors to the posteriors. Include and interpret credible intervals.  
+Include and interpret credible intervals.  
 ```{r, eval=TRUE, echo=FALSE}
 plot(density(mus_AL), main = "Estimated Density of Means", xlab = expression(mu))
 lines(density(mus_NL), lty = 2)
@@ -274,16 +262,12 @@ lines(density(vars_NL), lty = 2)
 legend("topright", c('Prior','Posterior'), lty = c(1,2))
 ```
 
-
-Then perform the posterior inference on the difference in means. 
 ```{r, eval=TRUE, echo=FALSE}
 diffs <- mus_NL-mus_AL
 mean(diffs)
 sd(diffs)
 ```
 
-
-Report and properly interpret an associated credible interval for this function of parameters. 
 ```{r, eval=TRUE, echo=FALSE}
 quantile(probs=c(0.025, 0.975), diffs)
 ```
