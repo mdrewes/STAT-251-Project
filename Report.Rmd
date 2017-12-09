@@ -159,48 +159,29 @@ For the analysis itself, we employ Gibbs sampling to simulate potential values o
 
 ## Results
 
-*Mean of American League Mean Homerun Distance:*
-```{r, eval=TRUE, echo=FALSE}
-mean(mus_AL)
+```{r, eval=TRUE, echo=FALSE, message=FALSE}
+library(dplyr)
+library(knitr)
 ```
 
-*Standard Deviation of American League Mean Homerun Distance:*
 ```{r, eval=TRUE, echo=FALSE}
-sd(mus_AL)
+St <- c("AL Mean", "AL Variance", "NL Mean", "NL Variance")
+Est <- c(mean(mus_AL), mean(vars_AL), mean(mus_NL), mean(vars_NL))
+ESE <- c(sd(mus_AL), sd(vars_AL), sd(mus_NL), sd(vars_NL))
+
+ci_mAL <- quantile(probs = c(0.025, 0.975), mus_AL)
+ci_vAL <- quantile(probs = c(0.025, 0.975), vars_AL)
+ci_mNL <- quantile(probs = c(0.025, 0.975), mus_NL)
+ci_vNL <- quantile(probs = c(0.025, 0.975), vars_NL)
+names(ci_mAL) <- names(ci_vAL) <- names(ci_mNL) <- names(ci_vNL) <- NULL
+CI <- sapply(list(ci_mAL, ci_vAL, ci_mNL, ci_vNL), function(i) paste("(",round(i[1],2),", ",round(i[2],2),")", sep = ""))
+
+Result <- tibble(Statistic = St, Estimate = Est, "Est. Standard Error" = ESE, "95% Credible Interval" = CI)
+kable(Result)
 ```
 
+*Based on our prior beliefs about the parameter distributions as well as the 2017 MLB season data, we are 95% certain that the true parameter values associated with the above statistics are contained in the coresponding intervals.*
 
-*Mean of National League Mean Homerun Distance:*
-```{r, eval=TRUE, echo=FALSE}
-mean(mus_NL)
-```
-
-*Standard Deviation of National League Mean Homerun Distance:*
-```{r, eval=TRUE, echo=FALSE}
-sd(mus_NL)
-```
-
-
-*Mean of American League Mean Homerun Distance:*
-```{r, eval=TRUE, echo=FALSE}
-mean(vars_AL)
-```
-
-*Standard Deviation of American League Mean Homerun Distance:*
-```{r, eval=TRUE, echo=FALSE}
-sd(vars_AL)
-```
-
-*Mean of American League Mean Homerun Distance:*
-```{r, eval=TRUE, echo=FALSE}
-mean(vars_NL)
-```
-
-*Standard Deviation of American League Mean Homerun Distance:*
-```{r, eval=TRUE, echo=FALSE}
-sd(vars_NL)
-```
-Include and interpret credible intervals.  
 ```{r, eval=TRUE, echo=FALSE}
 plot(density(mus_AL), main = "Estimated Density of Means", xlab = expression(mu))
 lines(density(mus_NL), lty = 2)
@@ -264,13 +245,18 @@ legend("topright", c('Prior','Posterior'), lty = c(1,2))
 
 ```{r, eval=TRUE, echo=FALSE}
 diffs <- mus_NL-mus_AL
-mean(diffs)
-sd(diffs)
+St <- c("NL Mean - AL Mean")
+Est <- c(mean(diffs))
+ESE <- c(sd(diffs))
+
+ci_diffs <- quantile(probs = c(0.025, 0.975), diffs, names = FALSE)
+CI <- paste("(",round(ci_diffs[1],2),", ",round(ci_diffs[2],2),")", sep = "")
+
+Result <- tibble(Statistic = St, Estimate = Est, "Est. Standard Error" = ESE, "95% Credible Interval" = CI)
+kable(Result)
 ```
 
-```{r, eval=TRUE, echo=FALSE}
-quantile(probs=c(0.025, 0.975), diffs)
-```
+*Based on our prior beliefs about the distribution of the mean home run distance for both the American League and the National League as well as the 2017 MLB season data, we are 95% certain that the true amount by which the mean home run distance of the National League exceeds that of the American League is contained in the above interval.*
 
 ```{r, eval=TRUE, echo=FALSE}
 plot(density(diffs), main = expression(paste("Density of ", mu[NL]-mu[AL])),
