@@ -283,10 +283,10 @@ plot(density(diffs), main = expression(paste("Density of ", mu[NL]-mu[AL])),
 
 ## Discussion
 
-Summarize your results 
+Examining the results of our Gibbs sampling procedure, we are unable to conclude that one league has a higher average home run distance than the other. This is not surprising, considering just how close the means of the two samples were. Though not our primary research focus, the variances of home run distance do appear to be significantly different between the two leagues, with the American League exhibiting more variance. The extent of this difference seems to be negligible, however, as the simulated results indicate an average difference in standard deviation of less than 2.
 
-identify shortcomings of the work, and 
+A potential shortcoming of this investigation is that it relies on the previously specified assumption of some form of current consistency in MLB leagues. Because the analysis draws from data limited to the 2017 season, a significant future change to either league may invalidate the results. Also, a significant change in the recent past, though unknown to the researchers, could potentially affect the state of the leagues such that these results are not representative of the past.
 
-explain what could be done in the future to either better answer your question or to address a natural follow-up question 
+There exist at least two obvious paths for research building upon these results. One option is to incorporate additional data from past seasons, assuming that no significant change has occured in either league during the corresponding range of time. Another is to instead investigate if and how the leagues have changed over time.
 
 ## Appendix (R code)
