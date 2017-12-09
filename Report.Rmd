@@ -112,7 +112,7 @@ Is there any difference in average home run distance between the MLB's two leagu
 
 ## Methods
 
-The data were obtained from ESPN’s site hittrackeronline.com (URL: http://www.hittrackeronline.com/top_true_distance.php). This site is run by ESPN Stats and Information Group. The original data consisted of a list of each home run hit in the 2017 season, which player hit the home run, the player's team, and the true distance (defined as the estimated total distance the ball would have traveled in the absence of physical barriers) of the hit in feet.
+The data were obtained from ESPN’s "hittracker" site (http://www.hittrackeronline.com/top_true_distance.php). This site is run by ESPN Stats and Information Group. The original data consists of a list of each home run hit in the 2017 season, which player hit the home run, the player's team, and the true distance of the hit (defined as the estimated total distance the ball would have traveled in the absence of physical barriers) in feet.
 
 We assume a normal distribution for the homerun distances of each population. This assumption is justified both by a histogram of each sample and by a normal probability plot of each sample.
 
@@ -130,7 +130,7 @@ qqnorm(NL, main = "Normal Q-Q Plot of NL Data")
 qqline(NL)
 ```
 
-The relevant parameters for the likelihood are the population mean and variance. It is reasonable to assume the data are conditionally iid, based on the indviduality of the batters. For the prior distribution of μ and , the mean home run distance for each respective league, we chose a Normal distribution with a mean of 420 ft. and a variance of 15^2 ft, based on our best guess for the means and our understanding of the overall spread of homerun distances. For an objective prior distribution for σ2, we chose an inverse gamma with shape=1 and rate=1.
+The relevant parameters for the likelihood are the population mean and variance. It is reasonable to assume the data are conditionally iid, based on the indviduality of the batters. For the prior distribution of $\mu_{AL}$ and $\mu_{NL}$, the mean home run distance for each respective league, we chose a Normal distribution with a mean of 420 ft. and a variance of 15^2 ft, based on our best guess for the means and our understanding of the overall spread of homerun distances. For an objective prior distribution for both $\sigma^2_{AL}$ and $\sigma^2_{NL}$, we chose an inverse gamma with shape=1 and rate=1.
 
 ```{r, eval=TRUE, echo=FALSE}
 prior_range <- seq(300,500,by=0.05)
