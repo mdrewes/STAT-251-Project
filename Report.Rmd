@@ -259,13 +259,11 @@ kable(Result)
 *Based on our prior beliefs about the distribution of the mean home run distance for both the American League and the National League as well as the 2017 MLB season data, we are 95% certain that the true amount by which the mean home run distance of the National League exceeds that of the American League is contained in the above interval.*
 
 ```{r, eval=TRUE, echo=FALSE}
-plot(density(diffs), main = expression(paste("Density of ", mu[NL]-mu[AL])),
+plot(density(diffs[-c(1:20000)]), main = expression(paste("Density of ", mu[NL]-mu[AL])),
      xlab = expression(mu[NL]-mu[AL]))
 ```
 
-*Concerned about the above plot.*
-*trace plots of diffs, mus_AL, and mus_NL*
-*Discarding first 20,000 obs yields extrememly low correlation and smooth/accurate estimate.*
+*In isolation, the simulated values for both means were not problematic. However, there was some very strong and unexpected correlation (above 0.94) between the first 20,000 or so values for each mean when considered together. For the sake of integrity of the results, we treated these correlated values as a sort of burn-in period for simulation of the difference between the means. The latter 80,000 values had a correlation of less than 0.004.*
 
 ## Discussion
 
