@@ -274,3 +274,249 @@ A potential shortcoming of this investigation is that it relies on the previousl
 There exist at least two obvious paths for research building upon these results. One option is to incorporate additional data from past seasons, assuming that no significant change has occured in either league during the corresponding range of time. Another is to instead investigate if and how the leagues have changed over time.
 
 ## Appendix (R code)
+
+```{r, eval=FALSE}
+
+## Loading the data
+
+for (x in c("AL.RData","NL.RData","All.RData")){load(x)}
+AL <- AL$True.Distance
+NL <- NL$True.Distance
+
+## Functions for updating mu and var
+
+update.mu <- function(sigma2, ys, m, v){
+  
+  n <- length(ys)
+  vstar <- 1/(n/sigma2+1/v)
+  mstar <- vstar*(n*mean(ys)/sigma2+m/v)
+  return( rnorm(1, mstar, sqrt(vstar)) )
+  
+}
+
+update.var <- function(mu, ys, a, b){
+  
+  n <- length(ys)
+  astar <- a + n/2
+  bstar <- b + 0.5*sum( (ys-mu)^2 )
+  return( 1/rgamma(1, astar, bstar) )
+  
+}
+## histogram and qqlines showing assumptions met for normality
+
+par(mfrow=c(1,2))
+hist(AL)
+hist(NL)
+
+
+
+par(mfrow=c(1,2))
+qqnorm(AL, main = "Normal Q-Q Plot of AL Data")
+qqline(AL)
+qqnorm(NL, main = "Normal Q-Q Plot of NL Data")
+qqline(NL)
+
+
+
+## plots of the priors
+
+prior_range <- seq(300,500,by=0.05)
+prior_like <- dnorm(prior_range, mean = 420, sd = 15)
+plot(prior_range, prior_like, type = 'l',
+     main = "Prior Distribution of the Mean",
+     xlab = expression(mu),
+     ylab = "Likelihood")
+
+
+library(invgamma)
+prior_range <- seq(0,10,by=0.05)
+# prior_like <- 1/dgamma(prior_range, shape = 1, rate = 1)
+prior_like <- dinvgamma(prior_range, shape = 1, rate = 1)
+plot(prior_range, prior_like, type = 'l',
+     main = "Prior Distribution of the Variance",
+     xlab = expression(sigma^2),
+     ylab = "Likelihood")
+     
+     
+## Results
+
+library(dplyr)
+library(knitr)
+
+
+St <- c("AL Mean", "AL Variance", "NL Mean", "NL Variance")
+Est <- c(mean(mus_AL), mean(vars_AL), mean(mus_NL), mean(vars_NL))
+ESE <- c(sd(mus_AL), sd(vars_AL), sd(mus_NL), sd(vars_NL))
+
+ci_mAL <- quantile(probs = c(0.025, 0.975), mus_AL)
+ci_vAL <- quantile(probs = c(0.025, 0.975), vars_AL)
+ci_mNL <- quantile(probs = c(0.025, 0.975), mus_NL)
+ci_vNL <- quantile(probs = c(0.025, 0.975), vars_NL)
+names(ci_mAL) <- names(ci_vAL) <- names(ci_mNL) <- names(ci_vNL) <- NULL
+CI <- sapply(list(ci_mAL, ci_vAL, ci_mNL, ci_vNL), function(i) paste("(",round(i[1],2),", ",round(i[2],2),")", sep = ""))
+
+Result <- tibble(Statistic = St, Estimate = Est, "Est. Standard Error" = ESE, "95% Credible Interval" = CI)
+kable(Result)
+
+
+## Estimated Density of Means
+
+plot(density(mus_AL), main = "Estimated Density of Means", xlab = expression(mu))
+lines(density(mus_NL), lty = 2)
+legend("topright", c('AL','NL'), lty = c(1,2))
+
+
+## Estimated Density of Variances
+
+plot(density(vars_AL), main = "Estimated Density of Variances", xlab = expression(sigma^2),
+     xlim = c(500,800), ylim = c(0,0.025))
+lines(density(vars_NL), lty = 2)
+legend("topright", c('AL','NL'), lty = c(1,2))
+
+
+## plotting the prior/ posterior of AL mean
+
+prior_range <- seq(350,450,by=0.05)
+prior_like <- dnorm(prior_range, mean = 420, sd = 15)
+
+plot(prior_range, prior_like, type = 'l',
+     main = "Prior/Post Dist. of AL Mean",
+     xlab = expression(mu),
+     ylab = "Likelihood", ylim = c(0,0.8))
+lines(density(mus_AL), lty = 2)
+legend("topright", c('Prior','Posterior'), lty = c(1,2))
+
+
+## plotting the prior/ posterior of NL mean
+
+prior_range <- seq(300,500,by=0.05)
+prior_like <- dnorm(prior_range, mean = 420, sd = 15)
+
+plot(prior_range, prior_like, type = 'l',
+     main = "Prior/Post Dist. of NL Mean",
+     xlab = expression(mu),
+     ylab = "Likelihood", ylim = c(0,0.8))
+lines(density(mus_NL), lty = 2)
+legend("topright", c('Prior','Posterior'), lty = c(1,2))
+
+
+## plotting the prior/ posterior of AL Variance
+
+prior_range <- seq(500,800,by=0.05)
+prior_like <- dinvgamma(prior_range, shape = 1, rate = 1)
+
+plot(prior_range, prior_like, type = 'l',
+     main = "Prior/Post Dist. of AL Variance",
+     xlab = expression(sigma^2),
+     ylab = "Likelihood", ylim = c(0,0.025))
+lines(density(vars_AL), lty = 2)
+legend("topright", c('Prior','Posterior'), lty = c(1,2))
+
+
+## plotting the prior/ posterior of NL Variance
+
+prior_range <- seq(500,800,by=0.05)
+prior_like <- dinvgamma(prior_range, shape = 1, rate = 1)
+
+plot(prior_range, prior_like, type = 'l',
+     main = "Prior/Post Dist. of NL Variance",
+     xlab = expression(sigma^2),
+     ylab = "Likelihood", ylim = c(0,0.025))
+lines(density(vars_NL), lty = 2)
+legend("topright", c('Prior','Posterior'), lty = c(1,2))
+
+
+## plotting the difference
+
+diffs <- mus_NL-mus_AL
+St <- c("NL Mean - AL Mean")
+Est <- c(mean(diffs))
+ESE <- c(sd(diffs))
+
+ci_diffs <- quantile(probs = c(0.025, 0.975), diffs, names = FALSE)
+CI <- paste("(",round(ci_diffs[1],2),", ",round(ci_diffs[2],2),")", sep = "")
+
+Result <- tibble(Statistic = St, Estimate = Est, "Est. Standard Error" = ESE, "95% Credible Interval" = CI)
+kable(Result)
+
+
+plot(density(diffs[-c(1:20000)]), main = expression(paste("Density of ", mu[NL]-mu[AL])),
+     xlab = expression(mu[NL]-mu[AL]))
+
+
+
+
+## AL Gibbs
+
+obs_AL <- AL
+m_AL <- 420
+v_AL <- 225
+a_AL <- 1
+b_AL <- 1
+
+set.seed(2017) 
+
+N <- 100000
+mus_AL <- rep(NA, N)
+vars_AL <- rep(NA, N)
+
+mus_AL[1] <- mean(obs_AL) 
+vars_AL[1] <- var(obs_AL)
+
+for (j in 2:N){
+  mus_AL[j] <- update.mu(sigma2 = vars_AL[j-1], ys = obs_AL, m=m_AL, v=v_AL)
+  vars_AL[j] <- update.var(mu = mus_AL[j], ys = obs_AL, a = a_AL, b = b_AL)
+}
+
+## Trace/acf Plots AL - mu and sigma^2
+
+par(mfrow = c(2,2))
+plot(mus_AL[1:1000], type="l",
+   main=expression(paste("Trace plot for ", mu)))
+
+plot(vars_AL[1:1000], type="l",
+  main=expression(paste(
+   "Trace plot for ", sigma^2)))
+
+acf(mus_AL, main = "") 
+
+acf(vars_AL, main = "")
+
+
+## NL Gibbs
+
+obs_NL <- NL
+m_NL <- 420
+v_NL <- 225
+a_NL <- 1
+b_NL <- 1 
+
+set.seed(2017) 
+
+N <- 100000
+mus_NL <- rep(NA, N)
+vars_NL <- rep(NA, N)
+
+mus_NL[1] <- mean(obs_NL) 
+vars_NL[1] <- var(obs_NL)
+
+for (j in 2:N){
+  mus_NL[j] <- update.mu(sigma2 = vars_NL[j-1], ys = obs_NL, m=m_NL, v=v_NL)
+  vars_NL[j] <- update.var(mu = mus_NL[j], ys = obs_NL, a = a_NL, b = b_NL)
+}
+
+## Trace/acf plots for Plots NL - mu and sigma^2
+
+par(mfrow = c(2,2))
+plot(mus_NL[1:1000], type="l",
+   main=expression(paste("Trace plot for ", mu)))
+
+plot(vars_NL[1:1000], type="l",
+  main=expression(paste(
+   "Trace plot for ", sigma^2)))
+
+acf(mus_NL, main = "") 
+
+acf(vars_NL, main = "")
+
+
