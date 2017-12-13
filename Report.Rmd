@@ -6,14 +6,14 @@ output:
     latex_engine: xelatex
 ---
 
-```{r}
+```{r, eval=TRUE, echo=FALSE}
 for (x in c("AL.RData","NL.RData","All.RData")){load(x)}
 AL <- AL$True.Distance
 NL <- NL$True.Distance
 ```
 
 
-```{r, Results}
+```{r, eval=TRUE, echo=FALSE}
 update.mu <- function(sigma2, ys, m, v){
   
   n <- length(ys)
@@ -33,7 +33,7 @@ update.var <- function(mu, ys, a, b){
 }
 ```
 
-```{r, AL Gibbs}
+```{r, eval=TRUE, echo=FALSE}
 obs_AL <- AL
 m_AL <- 420
 v_AL <- 225
@@ -55,7 +55,7 @@ for (j in 2:N){
 }
 ```
 
-```{r, Plots AL}
+```{r, eval=TRUE, echo=FALSE}
 par(mfrow = c(2,2))
 plot(mus_AL[1:1000], type="l",
    main=expression(paste("Trace plot for ", mu)))
@@ -69,7 +69,7 @@ acf(mus_AL, main = "")
 acf(vars_AL, main = "")
 ```
 
-```{r, NL Gibbs}
+```{r, eval=TRUE, echo=FALSE}
 obs_NL <- NL
 m_NL <- 420
 v_NL <- 225
@@ -91,7 +91,7 @@ for (j in 2:N){
 }
 ```
 
-```{r, Plots NL}
+```{r, eval=TRUE, echo=FALSE}
 par(mfrow = c(2,2))
 plot(mus_NL[1:1000], type="l",
    main=expression(paste("Trace plot for ", mu)))
@@ -141,7 +141,7 @@ plot(prior_range, prior_like, type = 'l',
      ylab = "Likelihood")
 ```
 
-```{r}
+```{r, eval=TRUE, echo=FALSE}
 library(invgamma)
 prior_range <- seq(0,10,by=0.05)
 # prior_like <- 1/dgamma(prior_range, shape = 1, rate = 1)
