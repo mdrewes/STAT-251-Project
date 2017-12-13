@@ -33,79 +33,6 @@ update.var <- function(mu, ys, a, b){
 }
 ```
 
-```{r, eval=TRUE, echo=FALSE}
-obs_AL <- AL
-m_AL <- 420
-v_AL <- 225
-a_AL <- 1
-b_AL <- 1
-
-set.seed(2017) 
-
-N <- 100000
-mus_AL <- rep(NA, N)
-vars_AL <- rep(NA, N)
-
-mus_AL[1] <- mean(obs_AL) 
-vars_AL[1] <- var(obs_AL)
-
-for (j in 2:N){
-  mus_AL[j] <- update.mu(sigma2 = vars_AL[j-1], ys = obs_AL, m=m_AL, v=v_AL)
-  vars_AL[j] <- update.var(mu = mus_AL[j], ys = obs_AL, a = a_AL, b = b_AL)
-}
-```
-
-```{r, eval=TRUE, echo=FALSE}
-par(mfrow = c(2,2))
-plot(mus_AL[1:1000], type="l",
-   main=expression(paste("Trace plot for ", mu)))
-
-plot(vars_AL[1:1000], type="l",
-  main=expression(paste(
-   "Trace plot for ", sigma^2)))
-
-acf(mus_AL, main = "") 
-
-acf(vars_AL, main = "")
-```
-
-```{r, eval=TRUE, echo=FALSE}
-obs_NL <- NL
-m_NL <- 420
-v_NL <- 225
-a_NL <- 1 # We can look at changing these values
-b_NL <- 1 # ^
-
-set.seed(2017) 
-
-N <- 100000
-mus_NL <- rep(NA, N)
-vars_NL <- rep(NA, N)
-
-mus_NL[1] <- mean(obs_NL) 
-vars_NL[1] <- var(obs_NL)
-
-for (j in 2:N){
-  mus_NL[j] <- update.mu(sigma2 = vars_NL[j-1], ys = obs_NL, m=m_NL, v=v_NL)
-  vars_NL[j] <- update.var(mu = mus_NL[j], ys = obs_NL, a = a_NL, b = b_NL)
-}
-```
-
-```{r, eval=TRUE, echo=FALSE}
-par(mfrow = c(2,2))
-plot(mus_NL[1:1000], type="l",
-   main=expression(paste("Trace plot for ", mu)))
-
-plot(vars_NL[1:1000], type="l",
-  main=expression(paste(
-   "Trace plot for ", sigma^2)))
-
-acf(mus_NL, main = "") 
-
-acf(vars_NL, main = "")
-```
-
-
 ## Introduction
 
 Is there any difference in average home run distance between the MLB's two leagues? The purpose of investigating this question is to see if one league, American League (AL) or National League (NL), has a statistical advantage when it comes to home run distance. This is important because each field has varying home run distances (the minimum distance required to clear the home run limit), which would give a competitive edge to the league that can hit farther home runs on average.
@@ -158,6 +85,78 @@ For the analysis itself, we employ Gibbs sampling to simulate potential values o
 
 
 ## Results
+
+```{r, eval=TRUE, echo=FALSE}
+obs_AL <- AL
+m_AL <- 420
+v_AL <- 225
+a_AL <- 1
+b_AL <- 1
+
+set.seed(2017) 
+
+N <- 100000
+mus_AL <- rep(NA, N)
+vars_AL <- rep(NA, N)
+
+mus_AL[1] <- mean(obs_AL) 
+vars_AL[1] <- var(obs_AL)
+
+for (j in 2:N){
+  mus_AL[j] <- update.mu(sigma2 = vars_AL[j-1], ys = obs_AL, m=m_AL, v=v_AL)
+  vars_AL[j] <- update.var(mu = mus_AL[j], ys = obs_AL, a = a_AL, b = b_AL)
+}
+```
+
+```{r, eval=TRUE, echo=FALSE}
+par(mfrow = c(2,2))
+plot(mus_AL[1:1000], type="l",
+   main=expression(paste("Trace plot for ", mu[AL])))
+
+plot(vars_AL[1:1000], type="l",
+  main=expression(paste(
+   "Trace plot for ", sigma[AL]^2)))
+
+acf(mus_AL, main = "") 
+
+acf(vars_AL, main = "")
+```
+
+```{r, eval=TRUE, echo=FALSE}
+obs_NL <- NL
+m_NL <- 420
+v_NL <- 225
+a_NL <- 1 # We can look at changing these values
+b_NL <- 1 # ^
+
+set.seed(2017) 
+
+N <- 100000
+mus_NL <- rep(NA, N)
+vars_NL <- rep(NA, N)
+
+mus_NL[1] <- mean(obs_NL) 
+vars_NL[1] <- var(obs_NL)
+
+for (j in 2:N){
+  mus_NL[j] <- update.mu(sigma2 = vars_NL[j-1], ys = obs_NL, m=m_NL, v=v_NL)
+  vars_NL[j] <- update.var(mu = mus_NL[j], ys = obs_NL, a = a_NL, b = b_NL)
+}
+```
+
+```{r, eval=TRUE, echo=FALSE}
+par(mfrow = c(2,2))
+plot(mus_NL[1:1000], type="l",
+   main=expression(paste("Trace plot for ", mu[NL])))
+
+plot(vars_NL[1:1000], type="l",
+  main=expression(paste(
+   "Trace plot for ", sigma[NL]^2)))
+
+acf(mus_NL, main = "") 
+
+acf(vars_NL, main = "")
+```
 
 ```{r, eval=TRUE, echo=FALSE, message=FALSE}
 library(dplyr)
