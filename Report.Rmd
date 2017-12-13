@@ -336,7 +336,82 @@ plot(prior_range, prior_like, type = 'l',
      main = "Prior Distribution of the Variance",
      xlab = expression(sigma^2),
      ylab = "Likelihood")
-     
+   
+## AL Gibbs
+
+obs_AL <- AL
+m_AL <- 420
+v_AL <- 225
+a_AL <- 1
+b_AL <- 1
+
+set.seed(2017) 
+
+N <- 100000
+mus_AL <- rep(NA, N)
+vars_AL <- rep(NA, N)
+
+mus_AL[1] <- mean(obs_AL) 
+vars_AL[1] <- var(obs_AL)
+
+for (j in 2:N){
+  mus_AL[j] <- update.mu(sigma2 = vars_AL[j-1], ys = obs_AL, m=m_AL, v=v_AL)
+  vars_AL[j] <- update.var(mu = mus_AL[j], ys = obs_AL, a = a_AL, b = b_AL)
+}
+
+## Trace/acf Plots AL - mu and sigma^2
+
+par(mfrow = c(2,2))
+plot(mus_AL[1:1000], type="l",
+   main=expression(paste("Trace plot for ", mu)))
+
+plot(vars_AL[1:1000], type="l",
+  main=expression(paste(
+   "Trace plot for ", sigma^2)))
+
+acf(mus_AL, main = "") 
+
+acf(vars_AL, main = "")
+
+
+## NL Gibbs
+
+obs_NL <- NL
+m_NL <- 420
+v_NL <- 225
+a_NL <- 1
+b_NL <- 1 
+
+set.seed(2017) 
+
+N <- 100000
+mus_NL <- rep(NA, N)
+vars_NL <- rep(NA, N)
+
+mus_NL[1] <- mean(obs_NL) 
+vars_NL[1] <- var(obs_NL)
+
+for (j in 2:N){
+  mus_NL[j] <- update.mu(sigma2 = vars_NL[j-1], ys = obs_NL, m=m_NL, v=v_NL)
+  vars_NL[j] <- update.var(mu = mus_NL[j], ys = obs_NL, a = a_NL, b = b_NL)
+}
+
+## Trace/acf plots for Plots NL - mu and sigma^2
+
+par(mfrow = c(2,2))
+plot(mus_NL[1:1000], type="l",
+   main=expression(paste("Trace plot for ", mu)))
+
+plot(vars_NL[1:1000], type="l",
+  main=expression(paste(
+   "Trace plot for ", sigma^2)))
+
+acf(mus_NL, main = "") 
+
+acf(vars_NL, main = "")
+
+   
+   
      
 ## Results
 
@@ -442,81 +517,6 @@ kable(Result)
 
 plot(density(diffs[-c(1:20000)]), main = expression(paste("Density of ", mu[NL]-mu[AL])),
      xlab = expression(mu[NL]-mu[AL]))
-
-
-
-
-## AL Gibbs
-
-obs_AL <- AL
-m_AL <- 420
-v_AL <- 225
-a_AL <- 1
-b_AL <- 1
-
-set.seed(2017) 
-
-N <- 100000
-mus_AL <- rep(NA, N)
-vars_AL <- rep(NA, N)
-
-mus_AL[1] <- mean(obs_AL) 
-vars_AL[1] <- var(obs_AL)
-
-for (j in 2:N){
-  mus_AL[j] <- update.mu(sigma2 = vars_AL[j-1], ys = obs_AL, m=m_AL, v=v_AL)
-  vars_AL[j] <- update.var(mu = mus_AL[j], ys = obs_AL, a = a_AL, b = b_AL)
-}
-
-## Trace/acf Plots AL - mu and sigma^2
-
-par(mfrow = c(2,2))
-plot(mus_AL[1:1000], type="l",
-   main=expression(paste("Trace plot for ", mu)))
-
-plot(vars_AL[1:1000], type="l",
-  main=expression(paste(
-   "Trace plot for ", sigma^2)))
-
-acf(mus_AL, main = "") 
-
-acf(vars_AL, main = "")
-
-
-## NL Gibbs
-
-obs_NL <- NL
-m_NL <- 420
-v_NL <- 225
-a_NL <- 1
-b_NL <- 1 
-
-set.seed(2017) 
-
-N <- 100000
-mus_NL <- rep(NA, N)
-vars_NL <- rep(NA, N)
-
-mus_NL[1] <- mean(obs_NL) 
-vars_NL[1] <- var(obs_NL)
-
-for (j in 2:N){
-  mus_NL[j] <- update.mu(sigma2 = vars_NL[j-1], ys = obs_NL, m=m_NL, v=v_NL)
-  vars_NL[j] <- update.var(mu = mus_NL[j], ys = obs_NL, a = a_NL, b = b_NL)
-}
-
-## Trace/acf plots for Plots NL - mu and sigma^2
-
-par(mfrow = c(2,2))
-plot(mus_NL[1:1000], type="l",
-   main=expression(paste("Trace plot for ", mu)))
-
-plot(vars_NL[1:1000], type="l",
-  main=expression(paste(
-   "Trace plot for ", sigma^2)))
-
-acf(mus_NL, main = "") 
-
-acf(vars_NL, main = "")
+```
 
 
